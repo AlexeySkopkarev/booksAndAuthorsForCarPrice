@@ -1,0 +1,7 @@
+services:
+  books_authors:
+    image: alexeyskopkarev/books_and_authors:latest
+    ports:
+      - "8181:8181"
+    platform: linux/amd64
+    restart: always

@@ -1,0 +1,259 @@
+openapi: 3.0.3
+info:
+  title: "Books and Authors"
+  description: "Тестовое задание для джунов - каталог книг.\n
+  
+  Модели:\n
+- Авторы (ФИО, год рождения, год смерти (если есть))\n
+- Книги (Название, год публикации, краткое содержание, связь с авторами)\n\n Поддреживается CRUD.\n
+Можно искать книги и авторов по любому полю, обновлять отдельные поля; 
+добавлять и удалять книги и авторов. Связь между книгами и авторами 
+устанавливается 'библиотекарем' периодически и автоматически, повторы удаляются.\n\n
+Проект сделан на Go."
+  version: 1.0.0
+  contact:
+    name: "Skopkarev Alexey"
+    email: a.skopkarev@mail.ru
+servers:
+  - url: 'http://localhost:8181'
+    description: "локальный сервер с API"
+
+paths:
+  /books:
+    get:
+      summary: "получить все книги"
+      description: "Получить полный список всех книг библиотеки. Выдаются поля id, name, annotation, publicyear, authors. Если записей нет - выдается пустое тело. ответа."
+      responses:
+        200:
+          description: Successful
+    post:
+      summary: "создать книги"
+      description: "Создать книги. В теле запроса передается массив объектов JSON"
+      requestBody:
+        description: "создание нескольких книг: [{\"ключ\": \"значение\", \"ключ\": \"значение\",.....},{\"ключ\": \"значение\", \"ключ\": \"значение\",.....}...]"
+        required: true
+        content:
+          'application/json':
+            schema:
+              type: array
+              items:
+                type: object
+      responses:
+        201:
+          description: Created
+        400:
+          description: Bad request
+        500:
+          description: Internal Server Error
+  /books/{id}:
+    get:
+      description: "Получить данные о книге по ее ID."
+      summary: "получить книгу"
+      parameters:
+        - name: "id"
+          in: path
+          required: true
+          description: "ID"
+          schema:
+            type: string
+      responses:
+        200:
+          description: Successful
+        400:
+          description: Bad request
+        404:
+          description: Not found
+    put:
+      description: "Обновить данные о книге по ее ID. Данные передаются в виде объекта JSON. Неизвестные поля откидываются. Не указанные в запросе поля не изменяются"
+      summary: "обновить книгу"
+      parameters:
+        - name: "id"
+          in: path
+          required: true
+          description: "ID книги"
+          schema:
+            type: string
+      requestBody:
+        description: "укажите поля, которые надо обновить: {\"ключ\": \"значение\", \"ключ\": \"значение\".....}"
+        required: true
+        content:
+          'application/json':
+            schema:
+              type: object
+      responses:
+        200:
+          description: Successful
+        400:
+          description: Bad request
+        404:
+          description: Not found
+    delete:
+      description: "Удалить одну книгу из коллекции по ее ID"
+      summary: "удалить книгу"
+      parameters:
+        - name: "id"
+          in: path
+          required: true
+          description: "ID книги"
+          schema:
+            type: string
+      responses:
+        200:
+          description: Successful
+        400:
+          description: Bad request
+        404:
+          description: Not found
+  /books/find/:
+    get:
+      summary: "найти книги"
+      description: "Получить список книг библиотеки, соответствующих запросу в виде подстрок в параметрах: name, annotation, publicyear, authors. Если записей нет - выдается сообщение, содержащее возможные параметры поиска"
+      parameters:
+        - name: "name"
+          in: query
+          required: true
+          description: "название"
+          schema:
+            type: string
+        - name: "annotation"
+          in: query
+          required: true
+          description: "краткое содержание"
+          schema:
+            type: string
+        - name: "publicyear"
+          in: query
+          required: true
+          description: "год публикации"
+          schema:
+            type: string
+        - name: "authors"
+          in: query
+          required: true
+          description: "авторы"
+          schema:
+            type: string
+      responses:
+        200:
+          description: Successful
+        404:
+          description: Not found
+  /authors:
+    get:
+      summary: "получить список всех авторов"
+      description: "Получить полный список всех авторов книг библиотеки. Выдаются поля id, name, birthyear, deathyear, books, booksQuantity. Если записей нет - выдается пустое тело. ответа."
+      responses:
+        200:
+          description: Successful
+    post:
+      summary: "создать автора"
+      description: "Создать автора. В теле запроса передается массив объектов JSON"
+      requestBody:
+        description: "создание нескольких авторов: [{\"ключ\": \"значение\", \"ключ\": \"значение\",.....},{\"ключ\": \"значение\", \"ключ\": \"значение\",.....}...]"
+        required: true
+        content:
+          'application/json':
+            schema:
+              type: array
+              items:
+                type: object
+      responses:
+        201:
+          description: Created
+        400:
+          description: Bad request
+        500:
+          description: Internal Server Error
+  /authors/{id}:
+    get:
+      description: "Получить данные об авторе по его ID."
+      summary: "получить автора"
+      parameters:
+        - name: "id"
+          in: path
+          required: true
+          description: "ID"
+          schema:
+            type: string
+      responses:
+        200:
+          description: Successful
+        400:
+          description: Bad request
+        404:
+          description: Not found
+    put:
+      description: "Обновить данные об авторе по его ID. Данные передаются в виде объекта JSON. Неизвестные поля откидываются. Не указанные в запросе поля не изменяются"
+      summary: "обновить данные автора"
+      parameters:
+        - name: "id"
+          in: path
+          required: true
+          description: "ID автора"
+          schema:
+            type: string
+      requestBody:
+        description: "укажите поля, которые надо обновить: {\"ключ\": \"значение\", \"ключ\": \"значение\".....}"
+        required: true
+        content:
+          'application/json':
+            schema:
+              type: object
+      responses:
+        200:
+          description: Successful
+        400:
+          description: Bad request
+        404:
+          description: Not found
+    delete:
+      description: "Удалить автора из списка авторов по его ID"
+      summary: "удалить автора"
+      parameters:
+        - name: "id"
+          in: path
+          required: true
+          description: "ID автора"
+          schema:
+            type: string
+      responses:
+        200:
+          description: Successful
+        400:
+          description: Bad request
+        404:
+          description: Not found
+  /authors/find/:
+    get:
+      summary: "найти авторов"
+      description: "Получить список авторов книг библиотеки, соответствующих запросу в виде подстрок в параметрах: name, birthyear, deathyear, books. Если записей нет - выдается сообщение, содержащее возможные параметры поиска"
+      parameters:
+        - name: "name"
+          in: query
+          required: true
+          description: "ФИО"
+          schema:
+            type: string
+        - name: "birthyear"
+          in: query
+          required: true
+          description: "год рождения"
+          schema:
+            type: string
+        - name: "deathyear"
+          in: query
+          required: true
+          description: "год смерти (если есть)"
+          schema:
+            type: string
+        - name: "books"
+          in: query
+          required: true
+          description: "книги"
+          schema:
+            type: string
+      responses:
+        200:
+          description: Successful
+        404:
+          description: Not found

@@ -1,4 +1,4 @@
-#Books & Authors
+Books & Authors
 
 Тестовое задание для Go-Джунов в CarPrice
 
@@ -13,6 +13,7 @@
 * crud.go - переменные и функции для CRUD. Файл генерируется по шаблону на основе анализа моделей
 * librarian.go - функция библиотекаря, выполняемая в отдельной горутине, бесконечный цикл, раз в 15 секунд.
 * generator\crudGenerator.go - генератор файла crud.go. Для добавления новой модели в проект, например, "Magazine", достаточно описать модель и запустить "go generate". 
+* test_api\Books and Authors.postman_collection.json - файл с тестовыми запросами, в том числе наполяющими тестовыми данными 
 
 Описание API находится в файле OpenAPI\openaply.yml.
 В папке Docker: Dockerfile, docker-compose.yaml и используемый для компиляции image статически связанный двоичный файл: main.
